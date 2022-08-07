@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RotaGps_TP1_DR4</string>
+    <string name="ver_coordenadas_da_localiza_o_atual">Ver Coordenadas da Localização Atual</string>
 </resources>
