@@ -40,14 +40,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
             val text = "Latitude: ${getLocationByGps()?.latitude.toString()} ; Longitude:${getLocationByGps()?.longitude.toString()}  "
 
-//            val name = date()
+            val name = date()
 
-//            val date = Calendar.getInstance().time
-//
-//            val dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-
-
-            val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "10:11.crd")
+            val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "$name.crd")
             val fos = FileOutputStream(file)
             fos.write(text.toByteArray())
             fos.close()
@@ -130,7 +125,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private fun date(): String {
         val date = Calendar.getInstance().time
 
-        val dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val dateTimeFormat = SimpleDateFormat("dd_MM_yyyy_HH-mm-ss", Locale.getDefault())
 
         return dateTimeFormat.format(date)
     }
