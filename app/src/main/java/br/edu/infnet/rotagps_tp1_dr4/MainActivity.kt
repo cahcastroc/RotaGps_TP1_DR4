@@ -1,13 +1,20 @@
 package br.edu.infnet.rotagps_tp1_dr4
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
@@ -20,22 +27,46 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         val btLocation = this.findViewById<Button>(R.id.btLocation)
         val btSave = findViewById<Button>(R.id.btSave)
+        val btRead = findViewById<Button>(R.id.btRead)
 
 
         btLocation.setOnClickListener {
 
-            getLocationByGps()
+            drawLayout(getLocationByGps())
 
         }
 
         btSave.setOnClickListener {
 
+            val text = "Latitude: ${getLocationByGps()?.latitude.toString()} ; Longitude:${getLocationByGps()?.longitude.toString()}  "
+
+//            val name = date()
+
+//            val date = Calendar.getInstance().time
+//
+//            val dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+
+
+            val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "10:11.crd")
+            val fos = FileOutputStream(file)
+            fos.write(text.toByteArray())
+            fos.close()
+            Toast.makeText(this,"Salvo,$text",Toast.LENGTH_LONG).show()
+
+        }
+
+        btRead.setOnClickListener {
+            val intent = Intent(this, List::class.java)
+            startActivity(intent)
         }
 
     }
 
-    private fun getLocationByGps() {
-        var location: Location?
+
+    private fun getLocationByGps() : Location?{
+
+
+        var location: Location? = null
         val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
         val isServiceEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (isServiceEnabled) {
@@ -51,9 +82,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
-                if (location != null) {
-                    drawLayout(location)
-                }
 
             } else {
                 requestPermissions(
@@ -62,48 +90,16 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 )
             }
         }
+        return location
 
     }
 
 
-    private fun getLocationByNetwork() {
-
-        var location: Location?
-        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
-        val isServiceEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (isServiceEnabled) {
-            if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    2000L,
-                    0f,
-                    this
-                )
-
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-                if (location != null) {
-                    drawLayout(location)
-                }
-
-            } else {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),
-                    COARSE_REQUEST
-                )
-            }
-        }
-
-
-    }
-
-    private fun drawLayout(location: Location) {
+    private fun drawLayout(location: Location?)  {
         val tvLatitude = findViewById<TextView>(R.id.tvLatitude)
         val tvLongitude = findViewById<TextView>(R.id.tvLongitude)
-        val latitude = location.latitude.toString()
-        val longitude = location.longitude.toString()
+        val latitude = location?.latitude.toString()
+        val longitude = location?.longitude.toString()
 
         tvLatitude.text = latitude
         tvLongitude.text = longitude
@@ -118,9 +114,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == COARSE_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getLocationByNetwork()
-        }
+//        if (requestCode == COARSE_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            getLocationByNetwork()
+//        }
 
         if (requestCode == FINE_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getLocationByGps()
@@ -130,5 +126,12 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     override fun onLocationChanged(p0: Location) {
 
+    }
+    private fun date(): String {
+        val date = Calendar.getInstance().time
+
+        val dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+
+        return dateTimeFormat.format(date)
     }
 }
