@@ -42,11 +42,17 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
             val name = date()
 
-            val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "$name.crd")
-            val fos = FileOutputStream(file)
-            fos.write(text.toByteArray())
-            fos.close()
-            Toast.makeText(this,"Salvo,$text",Toast.LENGTH_LONG).show()
+            if(isExternalStorageWritable()){
+                val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "$name.crd")
+                val fos = FileOutputStream(file)
+                fos.write(text.toByteArray())
+                fos.close()
+                Toast.makeText(this,"Salvo com sucesso - Nome do arquivo: $name",Toast.LENGTH_LONG).show()
+            } else{
+                Toast.makeText(this,"Mídia externa não disponível",Toast.LENGTH_LONG).show()
+            }
+
+
 
         }
 
@@ -91,14 +97,22 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
 
     private fun drawLayout(location: Location?)  {
-        val tvLatitude = findViewById<TextView>(R.id.tvLatitude)
-        val tvLongitude = findViewById<TextView>(R.id.tvLongitude)
-        val latitude = location?.latitude.toString()
-        val longitude = location?.longitude.toString()
+        if(location != null){
+            val tvLatitude = findViewById<TextView>(R.id.tvLatitude)
+            val tvLongitude = findViewById<TextView>(R.id.tvLongitude)
+            val latitude = location.latitude.toString()
+            val longitude = location.longitude.toString()
 
-        tvLatitude.text = latitude
-        tvLongitude.text = longitude
+            tvLatitude.text = latitude
+            tvLongitude.text = longitude
 
+
+        }
+
+    }
+
+    fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
     }
 
 
