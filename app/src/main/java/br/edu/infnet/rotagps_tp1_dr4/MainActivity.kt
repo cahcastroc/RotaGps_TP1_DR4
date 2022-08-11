@@ -18,7 +18,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
-    val COARSE_REQUEST = 1234
+
     val FINE_REQUEST = 5678
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,20 +38,23 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         btSave.setOnClickListener {
 
-            val text = "Latitude: ${getLocationByGps()?.latitude.toString()} ; Longitude:${getLocationByGps()?.longitude.toString()}  "
+            if(getLocationByGps() != null){
+                val text = "Latitude: ${getLocationByGps()?.latitude.toString()} ; Longitude:${getLocationByGps()?.longitude.toString()}  "
 
-            val name = date()
+                val name = date()
 
-            if(isExternalStorageWritable()){
-                val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "$name.crd")
-                val fos = FileOutputStream(file)
-                fos.write(text.toByteArray())
-                fos.close()
-                Toast.makeText(this,"Salvo com sucesso - Nome do arquivo: $name",Toast.LENGTH_LONG).show()
+                if(isExternalStorageWritable()){
+                    val file = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "$name.crd")
+                    val fos = FileOutputStream(file)
+                    fos.write(text.toByteArray())
+                    fos.close()
+                    Toast.makeText(this,"Salvo com sucesso - Nome do arquivo: $name",Toast.LENGTH_LONG).show()
+                } else{
+                    Toast.makeText(this,"Mídia externa não disponível",Toast.LENGTH_LONG).show()
+                }
             } else{
-                Toast.makeText(this,"Mídia externa não disponível",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"Atualize a localização ",Toast.LENGTH_LONG).show()
             }
-
 
 
         }
@@ -96,6 +99,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
 
+
+
     private fun drawLayout(location: Location?)  {
         if(location != null){
             val tvLatitude = findViewById<TextView>(R.id.tvLatitude)
@@ -105,7 +110,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
             tvLatitude.text = latitude
             tvLongitude.text = longitude
-
 
         }
 
@@ -122,10 +126,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-//        if (requestCode == COARSE_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            getLocationByNetwork()
-//        }
 
         if (requestCode == FINE_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getLocationByGps()

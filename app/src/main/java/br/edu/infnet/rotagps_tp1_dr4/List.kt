@@ -15,7 +15,6 @@ import kotlin.collections.List
 
 class List : AppCompatActivity(), AdapterView.OnItemClickListener {
 
-    val PICK_PDF_FILE = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,20 +26,19 @@ class List : AppCompatActivity(), AdapterView.OnItemClickListener {
             var files: Array<out File>? =
                 getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.listFiles()
 
-            var teste = ArrayList<String>()
+            var namesFiles = ArrayList<String>()
 
             if (files != null) {
                 for (i in 0..files.size - 1) {
-                    teste.add(files.get(i).name.toString())
+                    namesFiles.add(files.get(i).name.toString())
                 }
 
                 val listFiles = findViewById<ListView>(R.id.listFiles)
-                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, teste)
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, namesFiles)
                 listFiles.adapter = adapter
                 listFiles.choiceMode = ListView.CHOICE_MODE_SINGLE
                 listFiles.onItemClickListener = this
 
-                Toast.makeText(this, "${isExternalStorageWritable()}", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Mídia externa não disponível", Toast.LENGTH_LONG).show()
 
@@ -53,9 +51,6 @@ class List : AppCompatActivity(), AdapterView.OnItemClickListener {
     fun isExternalStorageWritable(): Boolean {
         return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
     }
-
-
-
 
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         var items :String = p0?.getItemAtPosition(p2) as String
@@ -73,7 +68,6 @@ class List : AppCompatActivity(), AdapterView.OnItemClickListener {
 
         startActivity(intent)
 
-        Toast.makeText(this, "oi ${String(bytes)}", Toast.LENGTH_LONG).show()
 
 
 }}

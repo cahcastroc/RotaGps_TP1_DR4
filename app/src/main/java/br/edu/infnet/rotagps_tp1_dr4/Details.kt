@@ -19,15 +19,6 @@ class Details : AppCompatActivity() {
         tvNameFile.text = "Arquivo: $nameFile"
         tvCoordinates.text = coordinates
 
-        val btReturn = findViewById<Button>(R.id.btReturn)
-
-        btReturn.setOnClickListener {
-            val intent = Intent(this, List::class.java)
-            startActivity(intent)
-        }
-
-
-
 
     }
 }

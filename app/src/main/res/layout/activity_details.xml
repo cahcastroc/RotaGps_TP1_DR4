@@ -4,26 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="false"
+    android:layout_gravity="center"
+    android:foregroundGravity="center_vertical|center"
     android:padding="10dp"
     tools:context=".Details">
-
-    <Button
-        android:id="@+id/btReturn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Voltar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.842"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCoordinates" />
 
     <TextView
         android:id="@+id/tvCoordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:layout_marginTop="392dp"
         android:text="Coordinates"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.462"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNameFile" />
 
@@ -33,7 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="Name File"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
